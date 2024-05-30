@@ -73,7 +73,7 @@ pub fn debugPrint(
         .Struct => |d| {
             try writer.writeAll(".{");
             switch (d.layout) {
-                .Packed => try writer.print(
+                .@"packed" => try writer.print(
                     " // packed struct(" ++
                         @typeName(d.backing_integer.?) ++ "): 0x{X}",
                     .{@as(d.backing_integer.?, @bitCast(data))},
