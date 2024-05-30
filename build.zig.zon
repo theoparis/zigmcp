@@ -4,8 +4,8 @@
     .paths = .{""},
     .dependencies = .{
         .uuid = .{
-            .url = "git+https://github.com/tensorush/zig-uuid.git#8d6fca9467d2cb2ccd375f5961cc5ad708909c2c",
-            .hash = "12205dc5573c8367bb42e0ce3406444b99140ca8738cef83be19c8a7ebfb28a636d9",
+            .url = "git+https://github.com/tensorush/zig-uuid#66320b7ca134ca9cb6224a6c27d69e0cbcd81522",
+            .hash = "1220de431b026406c27fb19317952762afffccf38c263ec82a198da4444d5672a560",
         },
         .@"minecraft-data" = .{
             .url = "git+https://github.com/PrismarineJS/minecraft-data.git#c7bb79c174b24946d60ba0c7514c595c9e2cba67",

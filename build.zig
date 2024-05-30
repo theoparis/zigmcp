@@ -8,7 +8,7 @@ pub fn build(b: *std.Build) void {
 
     const gen_exe = b.addExecutable(.{
         .name = "gen",
-        .root_source_file = .{ .path = "src/gen.zig" },
+        .root_source_file = b.path("src/gen.zig"),
         .target = b.host,
     });
     const run_gen_exe = b.addRunArtifact(gen_exe);
@@ -26,13 +26,13 @@ pub fn build(b: *std.Build) void {
 
     const mcp_mod = b.addModule(
         "mcp",
-        .{ .root_source_file = .{ .path = "src/main.zig" } },
+        .{ .root_source_file = b.path("src/main.zig") },
     );
     mcp_mod.addImport("uuid", uuid_mod);
     mcp_mod.addImport("mcp-generated", mcp_gen_mod);
 
     const main_tests = b.addTest(.{
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });
