@@ -1039,13 +1039,17 @@ test "bigtest.nbt, static" {
     const gzipbuf = @embedFile("test/bigtest.nbt");
     var gzipbufstream = std.io.fixedBufferStream(gzipbuf);
 
+    var gzipstream = std.compress.gzip.decompressor(
+        gzipbufstream.reader(),
+    );
+
     var buf_ = std.ArrayList(u8).init(testing.allocator);
     defer buf_.deinit();
     var fifo = std.fifo.LinearFifo(u8, .{ .Static = 512 }).init();
 
-    try std.compress.gzip.decompress(
-        gzipbufstream.reader(),
-        fifo.writer(),
+    try fifo.pump(
+        gzipstream.reader(),
+        buf_.writer(),
     );
 
     const buf = buf_.items;
@@ -1124,12 +1128,16 @@ test "bigtest.nbt, dynamic" {
     const gzipbuf = @embedFile("test/bigtest.nbt");
     var gzipbufstream = std.io.fixedBufferStream(gzipbuf);
 
+    var gzipstream = std.compress.gzip.decompressor(
+        gzipbufstream.reader(),
+    );
+
     var buf_ = std.ArrayList(u8).init(testing.allocator);
     defer buf_.deinit();
     var fifo = std.fifo.LinearFifo(u8, .{ .Static = 512 }).init();
-    try std.compress.gzip.decompress(
-        gzipbufstream.reader(),
-        fifo.writer(),
+    try fifo.pump(
+        gzipstream.reader(),
+        buf_.writer(),
     );
     const buf = buf_.items;
 
