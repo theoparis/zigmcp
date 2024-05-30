@@ -1038,16 +1038,16 @@ test "bigtest.nbt, static" {
     });
     const gzipbuf = @embedFile("test/bigtest.nbt");
     var gzipbufstream = std.io.fixedBufferStream(gzipbuf);
-    var gzipstream = try std.compress.gzip.decompress(
-        testing.allocator,
-        gzipbufstream.reader(),
-    );
-    defer gzipstream.deinit();
 
     var buf_ = std.ArrayList(u8).init(testing.allocator);
     defer buf_.deinit();
     var fifo = std.fifo.LinearFifo(u8, .{ .Static = 512 }).init();
-    try fifo.pump(gzipstream.reader(), buf_.writer());
+
+    try std.compress.gzip.decompress(
+        gzipbufstream.reader(),
+        fifo.writer(),
+    );
+
     const buf = buf_.items;
 
     var stream = std.io.fixedBufferStream(buf);
@@ -1123,16 +1123,14 @@ test "bigtest.nbt, static" {
 test "bigtest.nbt, dynamic" {
     const gzipbuf = @embedFile("test/bigtest.nbt");
     var gzipbufstream = std.io.fixedBufferStream(gzipbuf);
-    var gzipstream = try std.compress.gzip.decompress(
-        testing.allocator,
-        gzipbufstream.reader(),
-    );
-    defer gzipstream.deinit();
 
     var buf_ = std.ArrayList(u8).init(testing.allocator);
     defer buf_.deinit();
     var fifo = std.fifo.LinearFifo(u8, .{ .Static = 512 }).init();
-    try fifo.pump(gzipstream.reader(), buf_.writer());
+    try std.compress.gzip.decompress(
+        gzipbufstream.reader(),
+        fifo.writer(),
+    );
     const buf = buf_.items;
 
     var stream = std.io.fixedBufferStream(buf);

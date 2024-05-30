@@ -131,13 +131,13 @@ pub fn StructUT(
     }
     return switch (@typeInfo(T)) {
         .Struct => @Type(.{ .Struct = .{
-            .layout = .Auto,
+            .layout = .auto,
             .fields = &fields,
             .decls = &.{},
             .is_tuple = false,
         } }),
         .Union => |info| @Type(.{ .Union = .{
-            .layout = .Auto,
+            .layout = .auto,
             .tag_type = info.tag_type,
             .fields = &fields,
             .decls = &.{},
@@ -776,7 +776,7 @@ test "byte limited" {
 /// backing int probably needs to be bit width multiple of 8
 pub fn Packed(comptime T: type, comptime endian: std.builtin.Endian) type {
     const info = @typeInfo(T).Struct;
-    comptime std.debug.assert(info.layout == .Packed);
+    comptime std.debug.assert(info.layout == .@"packed");
     return struct {
         pub const Backing = info.backing_integer orelse
             @Type(.{ .Int = .{ .signedness = .unsigned, .bits = @bitSizeOf(T) } });
@@ -1009,7 +1009,7 @@ pub fn Spec(comptime T: type) type {
         .Array => Array(T),
         .Optional => |info| Optional(info.child),
         inline .Struct, .Union, .Enum => |info, v| {
-            if (v == .Struct and info.layout == .Packed)
+            if (v == .Struct and info.layout == .@"packed")
                 return Packed(T, .big);
             inline for (.{ "read", "write", "deinit", "size" }) |n| {
                 if (!@hasDecl(T, n))
