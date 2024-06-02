@@ -12,7 +12,7 @@ pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
 
-    const address = net.Address.initIp4(.{ 127, 0, 0, 1 }, 25565);
+    const address = try net.Address.resolveIp("::", 25565);
     var server = try address.listen(.{ .reuse_port = true });
 
     defer server.deinit();

@@ -256,7 +256,7 @@ pub fn main() !void {
         }
     }
 
-    const address = net.Address.initIp4(.{ 127, 0, 0, 1 }, 25400);
+    const address = try net.Address.resolveIp("::", 25400);
     var server = try address.listen(.{ .reuse_port = true });
     defer server.deinit();
 
