@@ -5,7 +5,7 @@ const Allocator = mem.Allocator;
 const assert = std.debug.assert;
 const testing = std.testing;
 
-const UuidMod = @import("uuid");
+const zuid = @import("zuid");
 
 const serde = @import("serde.zig");
 const PrefixedArray = serde.PrefixedArray;
@@ -85,19 +85,19 @@ pub fn PString(comptime max_len_opt: ?comptime_int) type {
 }
 
 pub const Uuid = struct {
-    pub const UT = UuidMod;
+    pub const UT = [16]u8;
     pub const E = error{EndOfStream};
     pub fn write(writer: anytype, in: UT, _: anytype) !void {
-        try writer.writeAll(&in.bytes);
+        try writer.writeAll(&in);
     }
     pub fn read(reader: anytype, out: *UT, _: anytype) !void {
-        try reader.readNoEof(&out.bytes);
+        try reader.readNoEof(out);
     }
     pub fn deinit(self: *UT, _: anytype) void {
         self.* = undefined;
     }
     pub fn size(self: UT, _: anytype) usize {
-        return self.bytes.len;
+        return self.len;
     }
     // stolen from https://github.com/regenerativep/zig-mc-server/blob/d82dc727311fd10d2e404ebb4715336637dcca97/src/mcproto.zig#L137
     // referenced https://github.com/AdoptOpenJDK/openjdk-jdk8u/blob/9a91972c76ddda5c1ce28b50ca38cbd8a30b7a72/jdk/src/share/classes/java/util/UUID.java#L153-L175

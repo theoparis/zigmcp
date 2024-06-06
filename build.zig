@@ -19,16 +19,16 @@ pub fn build(b: *std.Build) void {
         .{ .root_source_file = generated_file },
     );
 
-    const uuid_mod = b.dependency("uuid", .{
+    const zuid_mod = b.dependency("zuid", .{
         .optimize = optimize,
         .target = target,
-    }).module("Uuid");
+    }).module("zuid");
 
     const mcp_mod = b.addModule(
         "mcp",
         .{ .root_source_file = b.path("src/main.zig") },
     );
-    mcp_mod.addImport("uuid", uuid_mod);
+    mcp_mod.addImport("zuid", zuid_mod);
     mcp_mod.addImport("mcp-generated", mcp_gen_mod);
 
     const main_tests = b.addTest(.{
@@ -36,7 +36,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-    main_tests.root_module.addImport("uuid", uuid_mod);
+    main_tests.root_module.addImport("zuid", zuid_mod);
     main_tests.root_module.addImport("mcp-generated", mcp_gen_mod);
 
     const run_main_tests = b.addRunArtifact(main_tests);
